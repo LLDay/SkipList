@@ -155,12 +155,12 @@ SkipNode skipList_find(SkipList list, KeyType value) {
 
 
 
-SkipNode descend(SkipNode node, KeyType item, size_t lvl) {
+SkipNode descendAdd(SkipNode node, KeyType item, size_t lvl) {
     SkipNode nearest = getNearestNode(node, item);
     SkipNode addedNode;
 
     if (nearest->down)
-        addedNode = descend(nearest->down, item, lvl - 1);
+        addedNode = descendAdd(nearest->down, item, lvl - 1);
 
     else {
         SkipNode newNode = allocateNode();
@@ -183,6 +183,7 @@ SkipNode descend(SkipNode node, KeyType item, size_t lvl) {
 }
 
 
+
 size_t levelsSize(SkipList list) {
     SkipList pointer = list;
     size_t size = 0;
@@ -201,14 +202,38 @@ bool skipList_add(SkipList list, KeyType item) {
     if (skipList_contains(list, item))
         return false;
 
-    descend(list, item, levelsSize(list));
+    descendAdd(list, item, levelsSize(list));
     return true;
 }
 
 
 
 bool skipList_remove(SkipList list, KeyType item) {
+    SkipNode preDelete = NULL;
+    SkipNode pointer = list;
 
+    while (!preDelete) {
+        if (pointer == NULL)
+            return false;
+
+        while (pointer->next && pointer->next->key < item)
+            pointer = pointer->next;
+        
+        if (pointer->next->key == item)
+            preDelete = pointer;
+
+        pointer = pointer->down;
+    }
+
+    SkipNode delete = preDelete->next;
+    preDelete->next = delete->next;
+    free(delete);
+    delete = NULL;
+   
+    if (preDelete->down)
+        return skipList_remove(preDelete->down, item);
+    
+    return true;
 }
 
 
