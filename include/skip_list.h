@@ -2,7 +2,9 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <limits.h>
 
+#define SKIP_MIN INT_MIN
 typedef int KeyType;
 
 struct SkipNode {
@@ -14,15 +16,6 @@ struct SkipNode {
 typedef struct SkipNode SkipNodeType;
 typedef SkipNodeType * SkipNode;
 typedef SkipNode SkipList;
-
-struct HeadNode {
-    SkipNode next;
-    SkipNode down;
-};
-
-typedef struct HeadNode HeadNodeType;
-typedef HeadNodeType * HeadNode;
-
 
 SkipList createSkipList(const KeyType * items, size_t n, size_t lvls);
 

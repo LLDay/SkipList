@@ -15,19 +15,6 @@ SkipNode allocateNode() {
 }
 
 
-
-HeadNode allocateHead() {
-    HeadNode node = malloc(sizeof(HeadNodeType));
-    if (node == NULL)
-        exit(EXIT_FAILURE);
-
-    node->down = NULL;
-    node->next = NULL;
-    return node;
-}
-
-
-
 int comp(const void * elem1, const void * elem2) {
     int f = *((KeyType *)elem1);
     int s = *((KeyType *)elem2);
@@ -99,16 +86,16 @@ SkipNode getBottom(SkipNode node) {
 
 
 SkipList createSkipList(const KeyType items[], size_t n, size_t lvls) {
-    if (n == 0 || lvls < 2 || items == NULL || !isUniqueElems(items, n))
+    if (n == 0 || items == NULL || !isUniqueElems(items, n))
         return NULL;
 
-    KeyType * arr = malloc(sizeof(KeyType) * n);  
+    KeyType * arr = malloc(sizeof(KeyType) * (n + 1));  
     memcpy(arr, items, n * sizeof(KeyType));
-    
-    qsort(arr, n, sizeof(KeyType), comp);
+    arr[n] = SKIP_MIN;
+    qsort(arr, n + 1, sizeof(KeyType), comp);
 
     SkipList root = allocateNode();
-    fillSkipList(root, arr, n, lvls);
+    fillSkipList(root, arr, n + 1, lvls);
     free(arr);
     return root;
 }
