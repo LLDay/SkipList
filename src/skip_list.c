@@ -40,6 +40,7 @@ bool isUniqueElems(const KeyType arr[], size_t n) {
 }
 
 
+
 void fillSkipList(SkipList root, const KeyType * arr, size_t n, size_t current_lvl) {
     if (current_lvl) {
         SkipNode down = allocateNode(); 
@@ -76,6 +77,7 @@ void fillSkipList(SkipList root, const KeyType * arr, size_t n, size_t current_l
 }
 
 
+
 SkipNode getBottom(SkipNode node) {
     SkipNode pointer = node;
     while(pointer->down)
@@ -83,6 +85,7 @@ SkipNode getBottom(SkipNode node) {
     
     return pointer;
 }
+
 
 
 SkipList createSkipList(const KeyType items[], size_t n, size_t lvls) {
@@ -101,6 +104,7 @@ SkipList createSkipList(const KeyType items[], size_t n, size_t lvls) {
 }
 
 
+
 void destroyLine(SkipList root) {
     SkipNode pointer = root;
     SkipNode deleteItem;
@@ -114,6 +118,7 @@ void destroyLine(SkipList root) {
 }
 
 
+
 void destroySkipList(SkipList root) {
     SkipList pointer = root;
     SkipList deleteLine;
@@ -125,12 +130,16 @@ void destroySkipList(SkipList root) {
     }
 }
 
+
+
 SkipNode getNearestNode(SkipList list, KeyType value) {
     SkipNode pointer = list; 
     while (pointer->next && pointer->next->key <= value)
         pointer = pointer->next;
     return pointer;
 }
+
+
 
 SkipNode skipList_find(SkipList list, KeyType value) {
     SkipNode pointer = getNearestNode(list, value);
@@ -145,8 +154,55 @@ SkipNode skipList_find(SkipList list, KeyType value) {
 }
 
 
-bool skipList_add(SkipList list, KeyType item) {
+
+SkipNode descend(SkipNode node, KeyType item, size_t lvl) {
+    SkipNode nearest = getNearestNode(node, item);
+    SkipNode addedNode;
+
+    if (nearest->down)
+        addedNode = descend(nearest->down, item, lvl - 1);
+
+    else {
+        SkipNode newNode = allocateNode();
+        newNode->next = nearest->next;
+        newNode->key = item;
+        nearest->next = newNode;
+        return newNode;
+    }
+
+    if (isPut(lvl) && addedNode) {
+        SkipNode newNode = allocateNode();
+        newNode->next = nearest->next;
+        newNode->key = item;
+        newNode->down = addedNode;
+        nearest->next = newNode;
+        return newNode;
+    }
+
+    return NULL;
+}
+
+
+size_t levelsSize(SkipList list) {
+    SkipList pointer = list;
+    size_t size = 0;
     
+    while (pointer) {
+        pointer = pointer->down;
+        size++;
+    }
+
+    return size - 1;
+}
+
+
+
+bool skipList_add(SkipList list, KeyType item) {
+    if (skipList_contains(list, item))
+        return false;
+
+    descend(list, item, levelsSize(list));
+    return true;
 }
 
 

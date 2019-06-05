@@ -5,9 +5,10 @@
 int main() {
     srand(time(NULL));
 
-    KeyType a[] = {4, 2, 7, 1, 6, 9, 3, 8, 5};
+    KeyType a[] = {1, 2, 3, 4, 6, 7, 8, 9, 10};
     SkipList list = createSkipList(a, sizeof(a) / sizeof(a[0]), 2);
-    SkipNode b = skipList_find(list, 8);
+    skipList_add(list, 5);
+    printf("%d", skipList_size(list));
     destroySkipList(list);
     return 0;
 }
