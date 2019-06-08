@@ -6,4 +6,6 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -Wextra")
 
 add_subdirectory(src src)
+
+enable_testing()
 add_subdirectory(test test)

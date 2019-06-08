@@ -4,13 +4,16 @@
 
 #define CTEST_MAIN
 
+#pragma GCC diagnostic ignored "-Wformat" 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include "ctest.h"
+#pragma GCC diagnostic pop
+
 
 int main(int argc, const char *argv[]) {
     int result = ctest_main(argc, argv);
     return result;
 }
-
 
 
 CTEST(SKIP_LIST, Creaite) {
