@@ -19,6 +19,8 @@ typedef SkipNode SkipList;
 
 SkipList createSkipList(const KeyType * items, size_t n, size_t lvls);
 
+SkipList createEmptySkipList(size_t lvls);
+
 SkipNode skipList_find(SkipList list, KeyType value);
 
 void destroySkipList(SkipList root);

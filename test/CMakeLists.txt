@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 
-add_executable(test_e test.c)
-add_test(test test_e)
+include_directories(ctest)
 
-target_link_libraries(test_e skip_list)
+add_executable(test test.c)
+target_link_libraries(test skip_list)
+
+add_test(NAME test COMMAND test)

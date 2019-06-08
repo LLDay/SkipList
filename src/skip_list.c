@@ -105,6 +105,18 @@ SkipList createSkipList(const KeyType items[], size_t n, size_t lvls) {
 
 
 
+SkipList createEmptySkipList(size_t lvls) {
+    KeyType * arr = malloc(sizeof(KeyType));
+    *arr = SKIP_MIN;
+    SkipList root = allocateNode();
+    fillSkipList(root, arr, 1, lvls);
+    free(arr);
+    return root;
+}
+
+
+
+
 void destroyLine(SkipList root) {
     SkipNode pointer = root;
     SkipNode deleteItem;
@@ -126,8 +138,8 @@ void destroySkipList(SkipList root) {
     while (pointer) {
         deleteLine = pointer;
         pointer = pointer->down;
-        destroyLine(deleteLine);
     }
+    root = NULL;
 }
 
 
@@ -219,7 +231,7 @@ bool skipList_remove(SkipList list, KeyType item) {
         while (pointer->next && pointer->next->key < item)
             pointer = pointer->next;
         
-        if (pointer->next->key == item)
+        if (pointer->next && pointer->next->key == item)
             preDelete = pointer;
 
         pointer = pointer->down;
