@@ -71,3 +71,15 @@ CTEST(SKIP_LIST, AddRemove) {
 
     destroySkipList(list);
 }
+
+
+
+CTEST(SKIP_LIST, ChangeLevels) {
+    KeyType arr[] = {5, 8, 3, 9, 12, 1, 6, 7, 11, 2, 10, 4};
+    size_t size = sizeof(arr) / sizeof(arr[0]);
+
+    SkipList list = createSkipList(arr, size, 0);
+    list = newLevelSkipList(list, 2);
+    
+    destroySkipList(list);
+}

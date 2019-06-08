@@ -23,7 +23,9 @@ SkipList createEmptySkipList(size_t lvls);
 
 SkipNode skipList_find(SkipList list, KeyType value);
 
-void destroySkipList(SkipList root);
+SkipList newLevelSkipList(SkipList list, size_t lvl);
+
+void destroySkipList(SkipList list);
 
 bool skipList_add(SkipList list, KeyType item);
 

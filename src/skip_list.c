@@ -26,7 +26,23 @@ int comp(const void * elem1, const void * elem2) {
 
 
 bool isPut(size_t lvl) {
+    if (!lvl)
+        return true;
     return rand() % (lvl + 1);
+}
+
+
+
+size_t levelsSize(SkipList list) {
+    SkipList pointer = list;
+    size_t size = 0;
+    
+    while (pointer) {
+        pointer = pointer->down;
+        size++;
+    }
+
+    return size - 1;
 }
 
 
@@ -37,43 +53,6 @@ bool isUniqueElems(const KeyType arr[], size_t n) {
             if (arr[i] == arr[j])
                 return false;
     return true;
-}
-
-
-
-void fillSkipList(SkipList root, const KeyType * arr, size_t n, size_t current_lvl) {
-    if (current_lvl) {
-        SkipNode down = allocateNode(); 
-        root->down = down;
-        root->key = arr[0];
-        fillSkipList(root->down, arr, n, current_lvl - 1);
-    }
-    
-    SkipNode pointer = root;
-    if (!current_lvl) {
-        // for bottom layer 
-        for (size_t i = 0; i < n - 1; i++) {
-            pointer->key = arr[i];
-            pointer->next = allocateNode();
-            pointer = pointer->next;
-        }
-        // for last iteration
-        pointer->key = arr[n - 1];
-    }
-
-    else {
-        SkipNode downPointer = root->down->next;
-        // first elems of each layer are same
-        while (downPointer) {
-            if (isPut(current_lvl)) {
-                pointer->next = allocateNode();
-                pointer = pointer->next;
-                pointer->down = downPointer;
-                pointer->key = downPointer->key;
-            }
-            downPointer = downPointer->next;
-        }
-    }
 }
 
 
@@ -92,33 +71,36 @@ SkipList createSkipList(const KeyType items[], size_t n, size_t lvls) {
     if (n == 0 || items == NULL || !isUniqueElems(items, n))
         return NULL;
 
-    KeyType * arr = malloc(sizeof(KeyType) * (n + 1));  
+    KeyType * arr = malloc(sizeof(KeyType) * n);  
     memcpy(arr, items, n * sizeof(KeyType));
-    arr[n] = SKIP_MIN;
-    qsort(arr, n + 1, sizeof(KeyType), comp);
+    qsort(arr, n, sizeof(KeyType), comp);
 
     SkipList root = allocateNode();
-    fillSkipList(root, arr, n + 1, lvls);
+    root->key = SKIP_MIN;
+    
+    SkipNode pointer = root;
+    for (size_t i = 0; i < n; i++) {
+        pointer->next = allocateNode();
+        pointer = pointer->next;
+        pointer->key = arr[i];
+    }   
+
     free(arr);
-    return root;
+    return newLevelSkipList(root, lvls);
 }
 
 
 
 SkipList createEmptySkipList(size_t lvls) {
-    KeyType * arr = malloc(sizeof(KeyType));
-    *arr = SKIP_MIN;
     SkipList root = allocateNode();
-    fillSkipList(root, arr, 1, lvls);
-    free(arr);
-    return root;
+    root->key = SKIP_MIN;
+    return newLevelSkipList(root, lvls);
 }
 
 
 
-
-void destroyLine(SkipList root) {
-    SkipNode pointer = root;
+void destroyLine(SkipList list) {
+    SkipNode pointer = list;
     SkipNode deleteItem;
 
     while(pointer) {
@@ -131,15 +113,51 @@ void destroyLine(SkipList root) {
 
 
 
-void destroySkipList(SkipList root) {
-    SkipList pointer = root;
+void destroySkipList(SkipList list) {
+    SkipList pointer = list;
     SkipList deleteLine;
 
     while (pointer) {
         deleteLine = pointer;
         pointer = pointer->down;
     }
-    root = NULL;
+}
+
+
+
+SkipNode addLevel(SkipNode down, size_t lvlNum) {
+    SkipNode newRoot = allocateNode();
+    newRoot->down = down;
+    newRoot->key = SKIP_MIN;
+
+    SkipNode pUp = newRoot;
+    SkipNode pDown = down->next;
+
+    while (pDown) {
+        if (isPut(lvlNum)) {
+            pUp->next = allocateNode();
+            pUp = pUp->next;
+            pUp->key = pDown->key;
+            pUp->down = pDown;
+        }
+        pDown = pDown->next;
+    }
+
+    return newRoot;
+}
+
+
+
+SkipList newLevelSkipList(SkipList list, size_t newLvl) {
+    size_t lvl = levelsSize(list);
+    if (lvl == newLvl)
+        return list;
+
+    SkipNode root = list;
+    for (size_t i = lvl + 1; i <= newLvl; i++)
+        root = addLevel(root, i);
+
+    return root;
 }
 
 
@@ -192,20 +210,6 @@ SkipNode descendAdd(SkipNode node, KeyType item, size_t lvl) {
     }
 
     return NULL;
-}
-
-
-
-size_t levelsSize(SkipList list) {
-    SkipList pointer = list;
-    size_t size = 0;
-    
-    while (pointer) {
-        pointer = pointer->down;
-        size++;
-    }
-
-    return size - 1;
 }
 
 
