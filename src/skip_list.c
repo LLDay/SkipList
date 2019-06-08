@@ -41,7 +41,7 @@ size_t levelsSize(SkipList list) {
 bool isUniqueElems(const KeyType arr[], size_t n) {
     for (size_t i = 0; i < n; i++)
         for (size_t j = i + 1; j < n; j++)
-            if (arr[i] == arr[j])
+            if (snComp(&arr[i], &arr[j]) == 0)
                 return false;
     return true;
 }
@@ -64,7 +64,7 @@ SkipList createSkipList(const KeyType items[], size_t n, size_t lvls) {
 
     KeyType * arr = malloc(sizeof(KeyType) * n);  
     memcpy(arr, items, n * sizeof(KeyType));
-    qsort(arr, n, sizeof(KeyType), comp);
+    qsort(arr, n, sizeof(KeyType), snComp);
 
     SkipList root = allocateNode();
     root->key = SKIP_MIN;
@@ -163,7 +163,7 @@ SkipList newLevelSkipList(SkipList list, size_t newLvl) {
 
 SkipNode getNearestNode(SkipList list, KeyType value) {
     SkipNode pointer = list; 
-    while (pointer->next && pointer->next->key <= value)
+    while (pointer->next && snComp(&pointer->next->key, &value) <= 0)
         pointer = pointer->next;
     return pointer;
 }
@@ -173,7 +173,7 @@ SkipNode getNearestNode(SkipList list, KeyType value) {
 SkipNode skipList_find(SkipList list, KeyType value) {
     SkipNode pointer = getNearestNode(list, value);
 
-    if (pointer->key == value)
+    if (snComp(&pointer->key, &value) == 0)
         return getBottom(pointer);
 
     if (!pointer->down)
@@ -231,10 +231,10 @@ bool skipList_remove(SkipList list, KeyType item) {
         if (pointer == NULL)
             return false;
 
-        while (pointer->next && pointer->next->key < item)
+        while (pointer->next && snComp(&pointer->next->key, &item) < 0)
             pointer = pointer->next;
         
-        if (pointer->next && pointer->next->key == item)
+        if (pointer->next && snComp(&pointer->next->key, &item) == 0)
             preDelete = pointer;
 
         pointer = pointer->down;

@@ -17,7 +17,7 @@ typedef struct SkipNode SkipNodeType;
 typedef SkipNodeType * SkipNode;
 typedef SkipNode SkipList;
 
-int comp(const void * elem1, const void * elem2) {
+static int snComp(const void * elem1, const void * elem2) {
     int f = *((KeyType *)elem1);
     int s = *((KeyType *)elem2);
     if (f > s) return 1;
