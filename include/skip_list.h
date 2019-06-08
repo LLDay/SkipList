@@ -17,17 +17,6 @@ typedef struct SkipNode SkipNodeType;
 typedef SkipNodeType * SkipNode;
 typedef SkipNode SkipList;
 
-#pragma GCC diagnostic ignored "-Wunused-function"
-
-static int snComp(const void * elem1, const void * elem2) {
-    int f = *((KeyType *)elem1);
-    int s = *((KeyType *)elem2);
-    if (f > s) return 1;
-    if (f < s) return -1;
-    return 0;
-}
-
-#pragma GCC diagnostic pop
 
 SkipList createSkipList(const KeyType * items, size_t n, size_t lvls);
 

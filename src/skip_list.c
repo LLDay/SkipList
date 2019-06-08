@@ -16,6 +16,16 @@ SkipNode allocateNode() {
 
 
 
+int snComp(const void * elem1, const void * elem2) {
+    int f = *((KeyType *)elem1);
+    int s = *((KeyType *)elem2);
+    if (f > s) return 1;
+    if (f < s) return -1;
+    return 0;
+}
+
+
+
 bool addOrNot(size_t lvl) {
     if (!lvl)
         return true;
