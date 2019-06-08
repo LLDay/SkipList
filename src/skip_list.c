@@ -15,17 +15,8 @@ SkipNode allocateNode() {
 }
 
 
-int comp(const void * elem1, const void * elem2) {
-    int f = *((KeyType *)elem1);
-    int s = *((KeyType *)elem2);
-    if (f > s) return 1;
-    if (f < s) return -1;
-    return 0;
-}
 
-
-
-bool isPut(size_t lvl) {
+bool addOrNot(size_t lvl) {
     if (!lvl)
         return true;
     return rand() % (lvl + 1);
@@ -99,7 +90,7 @@ SkipList createEmptySkipList(size_t lvls) {
 
 
 
-void destroyLine(SkipList list) {
+void destroyLine(SkipNode list) {
     SkipNode pointer = list;
     SkipNode deleteItem;
 
@@ -120,6 +111,7 @@ void destroySkipList(SkipList list) {
     while (pointer) {
         deleteLine = pointer;
         pointer = pointer->down;
+        destroyLine(deleteLine);
     }
 }
 
@@ -134,7 +126,7 @@ SkipNode addLevel(SkipNode down, size_t lvlNum) {
     SkipNode pDown = down->next;
 
     while (pDown) {
-        if (isPut(lvlNum)) {
+        if (addOrNot(lvlNum)) {
             pUp->next = allocateNode();
             pUp = pUp->next;
             pUp->key = pDown->key;
@@ -156,6 +148,13 @@ SkipList newLevelSkipList(SkipList list, size_t newLvl) {
     SkipNode root = list;
     for (size_t i = lvl + 1; i <= newLvl; i++)
         root = addLevel(root, i);
+
+    SkipNode delete;
+    for (size_t i = lvl; i > newLvl; i--) {
+        delete = root;
+        root = root->down;
+        destroyLine(delete);
+    }
 
     return root;
 }
@@ -200,7 +199,7 @@ SkipNode descendAdd(SkipNode node, KeyType item, size_t lvl) {
         return newNode;
     }
 
-    if (isPut(lvl) && addedNode) {
+    if (addOrNot(lvl) && addedNode) {
         SkipNode newNode = allocateNode();
         newNode->next = nearest->next;
         newNode->key = item;
