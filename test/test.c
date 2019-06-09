@@ -76,12 +76,13 @@ CTEST(SKIP_LIST, AddRemove) {
 CTEST(SKIP_LIST, ChangeLevels) {
     KeyType arr[] = {5, 8, 3, 9, 12, 1, 6, 7, 11, 2, 10, 4};
     size_t size = sizeof(arr) / sizeof(arr[0]);
-    SkipList list = createSkipList(arr, size, 0);
+    SkipList oldList = createSkipList(arr, size, 0);
     
-    ASSERT_NULL(list->down);
+    ASSERT_NULL(oldList->down);
 
-    list = newLevelSkipList(list, 2);
+    SkipList list = newLevelSkipList(oldList, 2);
     ASSERT_NOT_NULL(list->down->down);
+    destroySkipList(oldList);
     
     if (list->next && list->next->key < 12) {
         SkipNode p = list->next;
@@ -93,11 +94,14 @@ CTEST(SKIP_LIST, ChangeLevels) {
 
     SkipNode firstLevel = list->down; 
     SkipNode zerolevel = list->down->down;   
-    list = newLevelSkipList(list, 1);
-    ASSERT_TRUE(list == firstLevel);
-    ASSERT_TRUE(list->down == zerolevel);
+    SkipList newlist = newLevelSkipList(list, 1);
     destroySkipList(list);
+
+    ASSERT_TRUE(newlist == firstLevel);
+    ASSERT_TRUE(newlist->down == zerolevel);
+    destroySkipList(newlist);
 }
+
 
 
 CTEST(SIMPLE_LIST, All) {

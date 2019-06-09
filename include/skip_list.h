@@ -17,21 +17,29 @@ typedef struct SkipNode SkipNodeType;
 typedef SkipNodeType * SkipNode;
 typedef SkipNode SkipList;
 
-
+// Возвращает список пропусков, составленный из массива размерности n
 SkipList createSkipList(const KeyType * items, size_t n, size_t lvls);
 
+// Возвращает пустой список (содержит элементы head)
 SkipList createEmptySkipList(size_t lvls);
 
+// Находит узел на нулевом слое
 SkipNode skipList_find(SkipList list, KeyType value);
 
+// Возвращает новый список с другим количеством слоев
 SkipList newLevelSkipList(SkipList list, size_t lvl);
 
+// Удаляет список
 void destroySkipList(SkipList list);
 
+// Добавляет элемент в список
 void skipList_add(SkipList list, KeyType item);
 
+// Удаляет элемент из списка
 bool skipList_remove(SkipList list, KeyType item);
 
+// Проверяет, содержится ли элемент в списке
 bool skipList_contains(SkipList list, KeyType item);
 
+// Находит количество элементов нижнего слоя
 size_t skipList_size(SkipList list);
