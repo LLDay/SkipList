@@ -1,6 +1,6 @@
 import numpy as np
 
-arr = np.arange(100000)
+arr = np.arange(1000000)
 np.random.shuffle(arr)
 
 sample = open('sample.txt', 'w')

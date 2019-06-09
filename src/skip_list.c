@@ -69,7 +69,7 @@ SkipNode getBottom(SkipNode node) {
 
 
 SkipList createSkipList(const KeyType items[], size_t n, size_t lvls) {
-    if (n == 0 || items == NULL || !isUniqueElems(items, n))
+    if (n == 0 || items == NULL)
         return NULL;
 
     KeyType * arr = malloc(sizeof(KeyType) * n);  
