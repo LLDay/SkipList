@@ -107,8 +107,6 @@ int main(int argc, char const *argv[]) {
     }
 
     const char * fileName = argv[1];
-    int * values = getValuesFromCmd(argc, argv);
-
     FILE * file = fopen(fileName, "r");
 
     if (file == NULL) {
@@ -120,6 +118,8 @@ int main(int argc, char const *argv[]) {
     int * array = readFromFile(file, size);
     fclose(file);
     
+
+    int * values = getValuesFromCmd(argc, argv);
     simpleListBenchmark(array, size, values, argc - 2);
     printf("---------------------\n");
     skipListBenchmark(array, size, values, argc - 2);
