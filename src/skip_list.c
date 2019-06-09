@@ -1,10 +1,10 @@
+#include "skip_list.h"
+
 #include "stdio.h"
 #include "stdlib.h"
 #include "memory.h"
 
-#include "skip_list.h"
-
-SkipNode allocateNode() {
+SkipNode skipAllocateNode() {
     SkipNode node = malloc(sizeof(SkipNodeType));
     if (node == NULL)
         exit(EXIT_FAILURE);
@@ -76,12 +76,12 @@ SkipList createSkipList(const KeyType items[], size_t n, size_t lvls) {
     memcpy(arr, items, n * sizeof(KeyType));
     qsort(arr, n, sizeof(KeyType), snComp);
 
-    SkipList root = allocateNode();
+    SkipList root = skipAllocateNode();
     root->key = SKIP_MIN;
     
     SkipNode pointer = root;
     for (size_t i = 0; i < n; i++) {
-        pointer->next = allocateNode();
+        pointer->next = skipAllocateNode();
         pointer = pointer->next;
         pointer->key = arr[i];
     }   
@@ -93,7 +93,7 @@ SkipList createSkipList(const KeyType items[], size_t n, size_t lvls) {
 
 
 SkipList createEmptySkipList(size_t lvls) {
-    SkipList root = allocateNode();
+    SkipList root = skipAllocateNode();
     root->key = SKIP_MIN;
     return newLevelSkipList(root, lvls);
 }
@@ -128,7 +128,7 @@ void destroySkipList(SkipList list) {
 
 
 SkipNode addLevel(SkipNode down, size_t lvlNum) {
-    SkipNode newRoot = allocateNode();
+    SkipNode newRoot = skipAllocateNode();
     newRoot->down = down;
     newRoot->key = SKIP_MIN;
 
@@ -137,7 +137,7 @@ SkipNode addLevel(SkipNode down, size_t lvlNum) {
 
     while (pDown) {
         if (addOrNot(lvlNum)) {
-            pUp->next = allocateNode();
+            pUp->next = skipAllocateNode();
             pUp = pUp->next;
             pUp->key = pDown->key;
             pUp->down = pDown;
@@ -202,7 +202,7 @@ SkipNode descendAdd(SkipNode node, KeyType item, size_t lvl) {
         addedNode = descendAdd(nearest->down, item, lvl - 1);
 
     else {
-        SkipNode newNode = allocateNode();
+        SkipNode newNode = skipAllocateNode();
         newNode->next = nearest->next;
         newNode->key = item;
         nearest->next = newNode;
@@ -210,7 +210,7 @@ SkipNode descendAdd(SkipNode node, KeyType item, size_t lvl) {
     }
 
     if (addOrNot(lvl) && addedNode) {
-        SkipNode newNode = allocateNode();
+        SkipNode newNode = skipAllocateNode();
         newNode->next = nearest->next;
         newNode->key = item;
         newNode->down = addedNode;

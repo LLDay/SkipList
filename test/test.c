@@ -1,4 +1,5 @@
 #include "skip_list.h"
+#include "simple_list.h"
 #include "stdlib.h"
 #include "time.h"
 
@@ -16,7 +17,7 @@ int main(int argc, const char *argv[]) {
 }
 
 
-CTEST(SKIP_LIST, Creaite) {
+CTEST(SKIP_LIST, Create) {
     SkipList a = createEmptySkipList(3);
     ASSERT_NOT_NULL(a->down);
     ASSERT_NOT_NULL(a->down->down);
@@ -63,6 +64,7 @@ CTEST(SKIP_LIST, AddRemove) {
 
     ASSERT_EQUAL(list->down->next->key, 1);
     ASSERT_EQUAL(skipList_find(list, 8)->next->key, 9);
+    ASSERT_NULL(skipList_find(list, 12)->next);
 
     for (size_t i = 1; i < size; i++) {
         ASSERT_TRUE(skipList_contains(list, arr[i]));
@@ -101,4 +103,25 @@ CTEST(SKIP_LIST, ChangeLevels) {
     ASSERT_TRUE(list == firstLevel);
     ASSERT_TRUE(list->down == zerolevel);
     destroySkipList(list);
+}
+
+
+CTEST(SIMPLE_LIST, All) {
+    KeyType arr[] = {5, 8, 3, 9, 12, 1, 6, 7, 11, 2, 10, 4};
+    size_t size = sizeof(arr) / sizeof(arr[0]);
+    SimpleList a = createSimpleList(arr, size);
+
+    SimpleList pointer = a;
+    for (size_t i = 0; i < size; i++) {
+        ASSERT_EQUAL(pointer->value, arr[i]);
+        pointer = pointer->next;
+    }
+    ASSERT_NULL(pointer);
+
+    ASSERT_NULL(simpleList_find(a, 13));
+    ASSERT_NULL(simpleList_find(a, 4)->next);
+
+    ASSERT_EQUAL(simpleList_find(a, 12)->next->value, 1);
+
+    destroySimpleList(a);
 }
