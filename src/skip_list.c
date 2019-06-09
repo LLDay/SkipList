@@ -4,6 +4,8 @@
 #include "stdlib.h"
 #include "memory.h"
 
+
+
 SkipNode skipAllocateNode() {
     SkipNode node = malloc(sizeof(SkipNodeType));
     if (node == NULL)

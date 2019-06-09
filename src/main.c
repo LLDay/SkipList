@@ -33,14 +33,14 @@ int * readFromFile(FILE * file, size_t size) {
     return array;
 }
 
-void skipListBenchmark(KeyType array[], size_t size, KeyType findValues[], size_t count) {
+void skipListBenchmark(FILE * to, KeyType array[], size_t size, KeyType findValues[], size_t count) {
     clock_t start = clock();
     SkipList skipList = createSkipList(array, size, log2(size));
 
     clock_t creatingTime = clock() - start;
-    printf("SkipList creating time: %ldms\n", 1000 * creatingTime / CLOCKS_PER_SEC);
+    fprintf(to, "SkipList creating time: %ldms\n", 1000 * creatingTime / CLOCKS_PER_SEC);
 
-    printf("SkipList finding:\n");
+    fprintf(to, "SkipList finding:\n");
 
     clock_t findingTime = 0;
     for (size_t i = 0; i < count; i++) {
@@ -49,27 +49,27 @@ void skipListBenchmark(KeyType array[], size_t size, KeyType findValues[], size_
         long int delta = clock() - start;
         findingTime += delta;
         if (skipNode) 
-            printf("Founded %d \t(%ldms)\n", findValues[i], 1000 * delta / CLOCKS_PER_SEC);
-        else printf("Not founded %d \t(%ldms)\n", findValues[i], 1000 * delta / CLOCKS_PER_SEC);
+            fprintf(to, "Founded %d \t(%ldms)\n", findValues[i], 1000 * delta / CLOCKS_PER_SEC);
+        else fprintf(to, "Not founded %d \t(%ldms)\n", findValues[i], 1000 * delta / CLOCKS_PER_SEC);
     }
 
     start = clock();
     destroySkipList(skipList);
     clock_t destroingTime = clock() - start;
-    printf("SkipList destroing time\t %ldms\n", 1000 * destroingTime / CLOCKS_PER_SEC);
-    printf("SkipList finding time:\t %ldms\n", 1000 * findingTime / CLOCKS_PER_SEC);
+    fprintf(to, "SkipList destroing time\t %ldms\n", 1000 * destroingTime / CLOCKS_PER_SEC);
+    fprintf(to, "SkipList finding time:\t %ldms\n", 1000 * findingTime / CLOCKS_PER_SEC);
 }
 
 
 
-void simpleListBenchmark(ValueType array[], size_t size, ValueType findValues[], size_t count) {
+void simpleListBenchmark(FILE * to, ValueType array[], size_t size, ValueType findValues[], size_t count) {
     clock_t start = clock();
     SimpleList simpleList = createSimpleList(array, size);
     
     clock_t creatingTime = clock() - start;
-    printf("SimpleList creating time: %ldms\n", 1000 * creatingTime / CLOCKS_PER_SEC);
+    fprintf(to, "SimpleList creating time: %ldms\n", 1000 * creatingTime / CLOCKS_PER_SEC);
 
-    printf("SimpleNode finding:\n");
+    fprintf(to, "SimpleNode finding:\n");
     clock_t findingTime = 0;
     for (size_t i = 0; i < count; i++) {
         start = clock();
@@ -78,51 +78,54 @@ void simpleListBenchmark(ValueType array[], size_t size, ValueType findValues[],
         findingTime += delta;
 
         if (simpleNode) 
-            printf("Founded %d \t(%ldms)\n", findValues[i], 1000 * delta / CLOCKS_PER_SEC);
-        else printf("Not founded %d \t(%ldms)\n", findValues[i], 1000 * delta / CLOCKS_PER_SEC);
+            fprintf(to, "Founded %d \t(%ldms)\n", findValues[i], 1000 * delta / CLOCKS_PER_SEC);
+        else fprintf(to, "Not founded %d \t(%ldms)\n", findValues[i], 1000 * delta / CLOCKS_PER_SEC);
     }
 
     start = clock();
     destroySimpleList(simpleList);
     clock_t destroingTime = clock() - start;
-    printf("SimpleList destroing time\t %ldms\n", 1000 * destroingTime / CLOCKS_PER_SEC);
-    printf("SimpleList finding time:\t %ldms\n", 1000 * findingTime / CLOCKS_PER_SEC);
+    fprintf(to, "SimpleList destroing time\t %ldms\n", 1000 * destroingTime / CLOCKS_PER_SEC);
+    fprintf(to, "SimpleList finding time:\t %ldms\n", 1000 * findingTime / CLOCKS_PER_SEC);
 }
 
 
 int * getValuesFromCmd(size_t argc, char const *argv[]) {
-    int * arr = malloc(sizeof(*arr) * (argc - 2));
+    int * arr = malloc(sizeof(*arr) * (argc - 3));
 
-    for (size_t i = 2; i < argc; i++) 
-        arr[i - 2] = atoi(argv[i]);
+    for (size_t i = 3; i < argc; i++) 
+        arr[i - 3] = atoi(argv[i]);
 
     return arr;
 }
 
 
 int main(int argc, char const *argv[]) {
-    if (argc < 3) {
-        printf("Missing parameters FILE_NAME FIND_VALUE");
+    if (argc < 4) {
+        printf("Required parameters: from_name to_name value1 [value 2 [...]]");
         exit(EXIT_FAILURE);
     }
 
-    const char * fileName = argv[1];
-    FILE * file = fopen(fileName, "r");
+    const char * fromName = argv[1];
+    const char * toName = argv[2];
+    FILE * from = fopen(fromName, "r");
 
-    if (file == NULL) {
+    if (from == NULL) {
         printf("Wrong file name");
         exit(EXIT_FAILURE);
     }
 
-    size_t size = countFileLines(file);
-    int * array = readFromFile(file, size);
-    fclose(file);
+    size_t size = countFileLines(from);
+    int * array = readFromFile(from, size);
+    fclose(from);
     
 
+    FILE * to = fopen(toName, "w");
     int * values = getValuesFromCmd(argc, argv);
-    simpleListBenchmark(array, size, values, argc - 2);
-    printf("---------------------\n");
-    skipListBenchmark(array, size, values, argc - 2);
+    simpleListBenchmark(to, array, size, values, argc - 3);
+    fprintf(to, "\n\n");
+    skipListBenchmark(to, array, size, values, argc - 3);
+    fclose(to);
 
     free(array);
     free(values);
