@@ -15,3 +15,7 @@ set_target_properties(simple_list PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 
 target_include_directories(simple_list PUBLIC ${PROJECT_SOURCE_DIR}/include)
+
+
+add_executable(demo main.c)
+target_link_libraries(demo skip_list simple_list)
