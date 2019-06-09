@@ -28,7 +28,7 @@ SkipList newLevelSkipList(SkipList list, size_t lvl);
 
 void destroySkipList(SkipList list);
 
-bool skipList_add(SkipList list, KeyType item);
+void skipList_add(SkipList list, KeyType item);
 
 bool skipList_remove(SkipList list, KeyType item);
 

@@ -223,12 +223,8 @@ SkipNode descendAdd(SkipNode node, KeyType item, size_t lvl) {
 
 
 
-bool skipList_add(SkipList list, KeyType item) {
-    if (skipList_contains(list, item))
-        return false;
-
+void skipList_add(SkipList list, KeyType item) {
     descendAdd(list, item, levelsSize(list));
-    return true;
 }
 
 

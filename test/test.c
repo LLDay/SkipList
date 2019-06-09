@@ -37,12 +37,8 @@ CTEST(SKIP_LIST, Create) {
     SkipList d = createSkipList(NULL, 3, 2);
     SkipList c = createSkipList(arr, 0, 3);
 
-    KeyType ununique[] = {3, 1, 4, 7, 4, 8, 3};
-    SkipList e = createSkipList(ununique, sizeof(ununique) / sizeof(ununique[0]), 1);
-
     ASSERT_NULL(d);
     ASSERT_NULL(c);
-    ASSERT_NULL(e);
 
     destroySkipList(a);
     destroySkipList(b);
@@ -56,11 +52,9 @@ CTEST(SKIP_LIST, AddRemove) {
     SkipList list = createEmptySkipList(2);
     
     for (size_t i = 0; i < size; i++) {
-        ASSERT_TRUE(skipList_add(list, arr[i]));
+        skipList_add(list, arr[i]);
         ASSERT_EQUAL(skipList_size(list), i + 1);
     }
-
-    ASSERT_FALSE(skipList_add(list, 5));
 
     ASSERT_EQUAL(list->down->next->key, 1);
     ASSERT_EQUAL(skipList_find(list, 8)->next->key, 9);
@@ -83,7 +77,7 @@ CTEST(SKIP_LIST, ChangeLevels) {
     KeyType arr[] = {5, 8, 3, 9, 12, 1, 6, 7, 11, 2, 10, 4};
     size_t size = sizeof(arr) / sizeof(arr[0]);
     SkipList list = createSkipList(arr, size, 0);
-
+    
     ASSERT_NULL(list->down);
 
     list = newLevelSkipList(list, 2);
