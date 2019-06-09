@@ -23,11 +23,11 @@ SkipList createSkipList(const KeyType * items, size_t n, size_t lvls);
 // Возвращает пустой список (содержит элементы head)
 SkipList createEmptySkipList(size_t lvls);
 
-// Находит узел на нулевом слое
-SkipNode skipList_find(SkipList list, KeyType value);
-
 // Возвращает новый список с другим количеством слоев
 SkipList newLevelSkipList(SkipList list, size_t lvl);
+
+// Находит узел на нулевом слое
+SkipNode skipList_find(SkipList list, KeyType value);
 
 // Удаляет список
 void destroySkipList(SkipList list);
