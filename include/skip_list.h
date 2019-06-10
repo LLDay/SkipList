@@ -23,8 +23,8 @@ SkipList createSkipList(const KeyType * items, size_t n, size_t lvls);
 // Возвращает пустой список (содержит элементы head)
 SkipList createEmptySkipList(size_t lvls);
 
-// Возвращает новый список с другим количеством слоев
-SkipList newLevelSkipList(SkipList list, size_t lvl);
+// Возвращает тот же список с другим количеством слоев
+SkipList skipList_changeLvl(SkipList list, size_t newLvl);
 
 // Находит узел на нулевом слое
 SkipNode skipList_find(SkipList list, KeyType value);

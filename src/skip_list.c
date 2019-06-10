@@ -89,7 +89,7 @@ SkipList createSkipList(const KeyType items[], size_t n, size_t lvls) {
     }   
 
     free(arr);
-    return newLevelSkipList(root, lvls);
+    return skipList_changeLvl(root, lvls);
 }
 
 
@@ -97,7 +97,7 @@ SkipList createSkipList(const KeyType items[], size_t n, size_t lvls) {
 SkipList createEmptySkipList(size_t lvls) {
     SkipList root = skipAllocateNode();
     root->key = SKIP_MIN;
-    return newLevelSkipList(root, lvls);
+    return skipList_changeLvl(root, lvls);
 }
 
 
@@ -152,7 +152,7 @@ SkipNode addLevel(SkipNode down, size_t lvlNum) {
 
 
 
-SkipList newLevelSkipList(SkipList list, size_t newLvl) {
+SkipList skipList_changeLvl(SkipList list, size_t newLvl) {
     size_t lvl = levelsSize(list);
     if (lvl == newLvl)
         return list;
