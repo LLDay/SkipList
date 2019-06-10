@@ -3,5 +3,6 @@ lib/
 test/ctest/
 example/
 .vscode/
+__pycache__/
 
 sample.txt

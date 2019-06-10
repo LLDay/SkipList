@@ -44,6 +44,12 @@ SimpleNode simpleList_find(SimpleList list, const ValueType item) {
 
 
 
+bool simpleList_contains(SimpleList list, const ValueType item) {
+    return simpleList_find(list, item) != NULL;
+}
+
+
+
 void destroySimpleList(SimpleList list) {
     SimpleNode pointer = list;
     SimpleNode delete;

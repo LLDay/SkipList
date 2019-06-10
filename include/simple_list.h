@@ -18,4 +18,6 @@ SimpleList createSimpleList(const ValueType arr[], size_t n);
 
 SimpleNode simpleList_find(SimpleList list, const ValueType item);
 
+bool simpleList_contains(SimpleList list, const ValueType item);
+
 void destroySimpleList(SimpleList list);

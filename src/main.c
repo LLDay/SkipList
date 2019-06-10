@@ -45,10 +45,10 @@ void skipListBenchmark(FILE * to, KeyType array[], size_t size, KeyType findValu
     clock_t findingTime = 0;
     for (size_t i = 0; i < count; i++) {
         start = clock();
-        SkipNode skipNode = skipList_find(skipList, findValues[i]);
+        bool found = skipList_contains(skipList, findValues[i]);
         long int delta = clock() - start;
         findingTime += delta;
-        if (skipNode) 
+        if (found) 
             fprintf(to, "Founded %d \t(%ldms)\n", findValues[i], 1000 * delta / CLOCKS_PER_SEC);
         else fprintf(to, "Not founded %d \t(%ldms)\n", findValues[i], 1000 * delta / CLOCKS_PER_SEC);
     }
@@ -56,8 +56,8 @@ void skipListBenchmark(FILE * to, KeyType array[], size_t size, KeyType findValu
     start = clock();
     destroySkipList(skipList);
     clock_t destroingTime = clock() - start;
+    fprintf(to, "SkipList total finding time:\t %ldms\n", 1000 * findingTime / CLOCKS_PER_SEC);
     fprintf(to, "SkipList destroing time\t %ldms\n", 1000 * destroingTime / CLOCKS_PER_SEC);
-    fprintf(to, "SkipList finding time:\t %ldms\n", 1000 * findingTime / CLOCKS_PER_SEC);
 }
 
 
@@ -73,11 +73,11 @@ void simpleListBenchmark(FILE * to, ValueType array[], size_t size, ValueType fi
     clock_t findingTime = 0;
     for (size_t i = 0; i < count; i++) {
         start = clock();
-        SimpleNode simpleNode = simpleList_find(simpleList, findValues[i]);
+        bool found = simpleList_contains(simpleList, findValues[i]);
         long int delta = clock() - start;
         findingTime += delta;
 
-        if (simpleNode) 
+        if (found) 
             fprintf(to, "Founded %d \t(%ldms)\n", findValues[i], 1000 * delta / CLOCKS_PER_SEC);
         else fprintf(to, "Not founded %d \t(%ldms)\n", findValues[i], 1000 * delta / CLOCKS_PER_SEC);
     }
@@ -85,8 +85,8 @@ void simpleListBenchmark(FILE * to, ValueType array[], size_t size, ValueType fi
     start = clock();
     destroySimpleList(simpleList);
     clock_t destroingTime = clock() - start;
+    fprintf(to, "SimpleList total finding time:\t %ldms\n", 1000 * findingTime / CLOCKS_PER_SEC);
     fprintf(to, "SimpleList destroing time\t %ldms\n", 1000 * destroingTime / CLOCKS_PER_SEC);
-    fprintf(to, "SimpleList finding time:\t %ldms\n", 1000 * findingTime / CLOCKS_PER_SEC);
 }
 
 
