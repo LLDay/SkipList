@@ -6,7 +6,7 @@
 
 
 
-SkipNode skipAllocateNode() {
+static SkipNode skipAllocateNode() {
     SkipNode node = malloc(sizeof(SkipNodeType));
     if (node == NULL)
         exit(EXIT_FAILURE);
@@ -18,7 +18,7 @@ SkipNode skipAllocateNode() {
 
 
 
-int snComp(const void * elem1, const void * elem2) {
+static int snComp(const void * elem1, const void * elem2) {
     int f = *((KeyType *)elem1);
     int s = *((KeyType *)elem2);
     if (f > s) return 1;
@@ -28,7 +28,7 @@ int snComp(const void * elem1, const void * elem2) {
 
 
 
-bool addOrNot(size_t lvl) {
+static bool addOrNot(size_t lvl) {
     if (!lvl)
         return true;
     return rand() % (lvl + 1);
@@ -36,7 +36,7 @@ bool addOrNot(size_t lvl) {
 
 
 
-size_t levelsSize(SkipList list) {
+static size_t levelsSize(SkipList list) {
     SkipList pointer = list;
     size_t size = 0;
     
@@ -50,17 +50,7 @@ size_t levelsSize(SkipList list) {
 
 
 
-bool isUniqueElems(const KeyType arr[], size_t n) {
-    for (size_t i = 0; i < n; i++)
-        for (size_t j = i + 1; j < n; j++)
-            if (snComp(&arr[i], &arr[j]) == 0)
-                return false;
-    return true;
-}
-
-
-
-SkipNode getBottom(SkipNode node) {
+static SkipNode getBottom(SkipNode node) {
     SkipNode pointer = node;
     while(pointer->down)
         pointer = pointer->down;
@@ -102,7 +92,7 @@ SkipList createEmptySkipList(size_t lvls) {
 
 
 
-void destroyLine(SkipNode list) {
+static void destroyLine(SkipNode list) {
     SkipNode pointer = list;
     SkipNode deleteItem;
 
@@ -129,7 +119,7 @@ void destroySkipList(SkipList list) {
 
 
 
-SkipNode addLevel(SkipNode down, size_t lvlNum) {
+static SkipNode addLevel(SkipNode down, size_t lvlNum) {
     SkipNode newRoot = skipAllocateNode();
     newRoot->down = down;
     newRoot->key = SKIP_MIN;
@@ -173,7 +163,7 @@ SkipList skipList_changeLvl(SkipList list, size_t newLvl) {
 
 
 
-SkipNode getNearestNode(SkipList list, KeyType value) {
+static SkipNode getNearestNode(SkipList list, KeyType value) {
     SkipNode pointer = list; 
     while (pointer->next && snComp(&pointer->next->key, &value) <= 0)
         pointer = pointer->next;
@@ -196,7 +186,7 @@ SkipNode skipList_find(SkipList list, KeyType value) {
 
 
 
-SkipNode descendAdd(SkipNode node, KeyType item, size_t lvl) {
+static SkipNode descendAdd(SkipNode node, KeyType item, size_t lvl) {
     SkipNode nearest = getNearestNode(node, item);
     SkipNode addedNode;
 

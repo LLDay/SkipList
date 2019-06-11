@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <memory.h>
 
-SimpleNode simpleAllocateNode() {
+static SimpleNode simpleAllocateNode() {
     SimpleNode node = malloc(sizeof(SimpleNodeType));
     if (node == NULL)
         exit(EXIT_FAILURE);
